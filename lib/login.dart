@@ -17,7 +17,6 @@ class _LoginState extends State<Login> {
     FirebaseAuth auth = FirebaseAuth.instance;
 
     alertaErro(String erro) {
-      debugPrint("entrouu");
       showDialog(
           context: context,
           builder: (context) {

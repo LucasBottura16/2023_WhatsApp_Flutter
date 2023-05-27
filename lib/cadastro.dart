@@ -45,6 +45,7 @@ class _CadastroState extends State<Cadastro> {
 
     Map<String, dynamic> conta = {
       "nome": _controllerNome.text,
+      "URL" : null
     };
 
     if (nome.isNotEmpty) {
