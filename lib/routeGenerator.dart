@@ -1,6 +1,5 @@
 import 'package:firebase/configuracoes.dart';
 import 'package:firebase/mensagens.dart';
-import 'package:firebase/model/usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase/cadastro.dart';
 import 'package:firebase/home.dart';

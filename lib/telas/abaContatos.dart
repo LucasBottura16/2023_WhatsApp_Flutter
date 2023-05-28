@@ -28,6 +28,7 @@ class _AbaContatosState extends State<AbaContatos> {
         if ( item.get("URL") == myUrl) continue;
 
         Usuario usuario = Usuario();
+        usuario.uidUsuario = item.id;
         usuario.nome =  item.get("nome");
         usuario.url =  item.get("URL");
 

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class Mensagem {
 
@@ -8,6 +7,19 @@ class Mensagem {
   String? _tipo;
 
   Mensagem();
+
+  Map<String, dynamic> toMap(){
+
+    Map<String, dynamic> map = {
+      "_idUsuario" : _idUsuario,
+      "_mensagem" : _mensagem,
+      "_url" : _url,
+      "_tipo" : _tipo
+    };
+
+    return map;
+
+  }
 
   String get tipo => _tipo!;
 
