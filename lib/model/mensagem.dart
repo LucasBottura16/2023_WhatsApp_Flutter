@@ -5,6 +5,7 @@ class Mensagem {
   String? _mensagem;
   String? _url;
   String? _tipo;
+  String? _data;
 
   Mensagem();
 
@@ -14,11 +15,19 @@ class Mensagem {
       "_idUsuario" : _idUsuario,
       "_mensagem" : _mensagem,
       "_url" : _url,
-      "_tipo" : _tipo
+      "_tipo" : _tipo,
+      "_data" : _data,
     };
 
     return map;
 
+  }
+
+
+  String get data => _data!;
+
+  set data(String value) {
+    _data = value;
   }
 
   String get tipo => _tipo!;

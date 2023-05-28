@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:firebase/model/usuario.dart';
+import 'package:firebase/routeGenerator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase/model/conversa.dart';
 import 'package:flutter/material.dart';
@@ -105,8 +107,17 @@ class _AbaConversasState extends State<AbaConversas> {
                 String tipo = item["tipoMensagem"];
                 String mensagem = item["mensagem"];
                 String nome = item["nome"];
+                String idDestinatario = item["idDestinatario"];
+
+                Usuario usuario = Usuario();
+                usuario.nome = nome;
+                usuario.url = urlImagem;
+                usuario.uidUsuario = idDestinatario;
 
                 return ListTile(
+                  onTap: (){
+                    Navigator.pushNamed(context, RouteGenerator.rotaMensagem, arguments: usuario);
+                  },
                   contentPadding:  const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   leading: CircleAvatar(
                     backgroundColor: Colors.grey,

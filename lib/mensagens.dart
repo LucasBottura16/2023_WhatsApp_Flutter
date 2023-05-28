@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase/model/conversa.dart';
 import 'package:firebase/model/mensagem.dart';
 import 'package:firebase/model/usuario.dart';
@@ -21,6 +22,9 @@ class _TelaMensagensState extends State<TelaMensagens> {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  final _controllerM = StreamController<QuerySnapshot>.broadcast();
+  final ScrollController _scrollController = ScrollController();
+
   final TextEditingController _controllerMensagem = TextEditingController();
   String? _uid;
   String? _uidDestinatario;
@@ -36,6 +40,7 @@ class _TelaMensagensState extends State<TelaMensagens> {
       mensagem.idUsuario = _uid!;
       mensagem.mensagem = textoMensagem;
       mensagem.url = "";
+      mensagem.data = Timestamp.now().toString();
       mensagem.tipo = "Texto";
 
       _salvaMensagem(_uid!, _uidDestinatario!, mensagem);
@@ -118,6 +123,7 @@ class _TelaMensagensState extends State<TelaMensagens> {
     mensagem.idUsuario = _uid!;
     mensagem.mensagem = "";
     mensagem.url = url;
+    mensagem.data = Timestamp.now().toString();
     mensagem.tipo = "Imagem";
 
     _salvaMensagem(_uid!, _uidDestinatario!, mensagem);
@@ -131,7 +137,27 @@ class _TelaMensagensState extends State<TelaMensagens> {
       _uid = auth.currentUser?.uid;
       _uidDestinatario = widget.contato.uidUsuario;
     });
+
+    _adicionarListaConversas();
     return null;
+  }
+
+  Stream<QuerySnapshot>? _adicionarListaConversas()  {
+
+    final stream = firestore
+        .collection("Mensagens")
+        .doc(_uid)
+        .collection(_uidDestinatario!)
+        .orderBy("_data", descending: false)
+        .snapshots();
+
+    stream.listen((event) {
+      _controllerM.add(event);
+      Timer(const Duration(seconds: 1), (){_scrollController.jumpTo(_scrollController.position.maxScrollExtent);});
+    });
+
+    return null;
+
   }
 
   @override
@@ -145,11 +171,7 @@ class _TelaMensagensState extends State<TelaMensagens> {
   Widget build(BuildContext context) {
 
     Widget streamBuilderMensagens = StreamBuilder(
-        stream: firestore
-            .collection("Mensagens")
-            .doc(_uid)
-            .collection(_uidDestinatario!)
-            .snapshots(),
+        stream: _controllerM.stream,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -172,6 +194,7 @@ class _TelaMensagensState extends State<TelaMensagens> {
               } else {
                 return Expanded(
                     child: ListView.builder(
+                      controller: _scrollController,
                         itemCount: querySnapshot?.docs.length,
                         itemBuilder: (context, index) {
 
